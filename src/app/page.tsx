@@ -19,18 +19,25 @@ const DEFAULT_GAME_STATE: GameState = {
   playerBPaddlePosition: 0
 }
 
-const BASE_PADDLE_STYLES: CSSProperties = {width: '12px', height: '120px', backgroundColor: 'black'}
+const BASE_PADDLE_STYLES: CSSProperties = {width: '12px', height: '120px', backgroundColor: 'white'}
+
+const MIN_PADDLE_POSITION = 0;
+const MAX_PADDLE_POSITION = 40;
 
 export default function Home() {
   const [gameState, setGameState] = useState<GameState>(DEFAULT_GAME_STATE)
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.key === 'ArrowDown') {
-      setGameState({...gameState, playerAPaddlePosition: gameState.playerAPaddlePosition - 1})
+      const newPositon = Math.min(gameState.playerAPaddlePosition + 1, MAX_PADDLE_POSITION)
+      
+      setGameState({...gameState, playerAPaddlePosition: newPositon})
     }
     
     if (e.key === 'ArrowUp') {
-      setGameState({...gameState, playerAPaddlePosition: gameState.playerAPaddlePosition + 1})
+      const newPositon = Math.max(gameState.playerAPaddlePosition - 1 , MIN_PADDLE_POSITION)
+
+      setGameState({...gameState, playerAPaddlePosition: newPositon})
     }
   }, [gameState])
 
@@ -43,8 +50,25 @@ export default function Home() {
   }, [handleKeyDown])
 
   return (
-    <div style={{display: 'flex', gap: '120px'}}>
+    <div style={{
+      position: 'relative',
+      display: 'flex',
+      justifyContent: 'space-between',
+      border: '1px solid white',
+      padding: '40px',
+      width: '600px',
+      height: '500px'
+    }}>
       <div style={{...BASE_PADDLE_STYLES, marginTop: gameState.playerAPaddlePosition * 10}}></div>
+      <div style={{ border: '2px dashed white'}}></div>
+      <div style={{
+        position: 'absolute',
+        width: '15px',
+        height: '15px',
+        backgroundColor: 'white',
+        top: 150,
+        left: 450,
+      }}></div>
       <div style={{...BASE_PADDLE_STYLES}}></div>
     </div>
   )
